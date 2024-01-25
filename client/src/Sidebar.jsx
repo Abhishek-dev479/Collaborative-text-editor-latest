@@ -10,7 +10,7 @@ export default function Sidebar(props){
     return (
         <div id='sidebar-backdrop' onClick={closeSidebar}>
         <div id="sidebar" onClick={(e) => e.stopPropagation()}>
-            {/* <div className='close-icon-div'><FontAwesomeIcon icon={faXmark} className='close-icon' onClick={closeSidebar} /></div> */}
+            <div className='close-icon-div'><FontAwesomeIcon icon={faXmark} className='close-icon' onClick={closeSidebar} /></div>
             {!props.loggedIn ? <button id='login'>Login/Signup</button> :
             <div id='profile'>
                 <img src="/save.png" alt="" />

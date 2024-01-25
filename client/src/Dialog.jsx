@@ -11,9 +11,6 @@ export default function Dialog(props){
     function removeDialog(){
         props.removeDialog();
     }
-    // function saveDocument(){
-    //     props.setFileName(url);
-    // }
     return(
         <div id='dialog-backdrop' onClick={removeDialog}>
             <div id='dialog' onClick={(e) => {e.stopPropagation()}}>

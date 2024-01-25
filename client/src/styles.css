@@ -111,11 +111,11 @@ body{
     height: 100%;
     width: 320px;
     /* background-color: rgb(68, 68, 195); */
-    background-color: white;
+    background-color: blue;
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 10;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -170,7 +170,7 @@ body{
     width: 100%;
     height: 100%;
     /* background-color: antiquewhite; */
-    z-index: 5;
+    z-index: 1;
 }
 
 #login{
@@ -181,4 +181,12 @@ body{
     border-radius: 5px;
     width: 80%;
     margin-top: 5px;
+}
+
+.open-icon{
+    position: absolute;
+    left: 15px;
+    top: 13px;
+    cursor: pointer;
+    z-index: 4;
 }
