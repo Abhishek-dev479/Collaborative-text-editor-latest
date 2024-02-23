@@ -1,0 +1,58 @@
+/* Resetting default margins and padding for all elements */
+
+:root {
+    --save: #265073;
+    --sidebar: #2D9596;
+    --toolbar: #9AD0C2;
+    --background: #F1FADA
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styling the container div */
+.div1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust height as needed */
+}
+
+/* Styling input fields */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 250px; /* Adjust width as needed */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Styling the button */
+button {
+    padding: 10px 20px;
+    background-color: var(--sidebar);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--save);
+}
+
+/* Styling the message paragraph */
+#message{
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ff0000; /* Red color for error message, adjust as needed */
+}

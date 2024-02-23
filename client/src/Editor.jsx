@@ -9,6 +9,7 @@ import Sidebar from './Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 const SAVE_INTERVAL_MS = 2000
 const TOOLBAR_OPTIONS = [
@@ -24,14 +25,94 @@ const TOOLBAR_OPTIONS = [
 ]
 
 export default function Editor() {
-  const { id: documentId } = useParams()
+  const { docid: documentId, userid: userId } = useParams();
   const [socket, setSocket] = useState()
   const [quill, setQuill] = useState()
   let [dialog, setDialog] = useState([false, true]);
   let [url, setUrl] = useState('http://localhost:3000'+useLocation().pathname);
   let [save, setSave] = useState(true);
   let [sidebar, setSidebar] = useState(false);
-  let [logIn, setLogin] = useState(false);
+  let [login, setLogin] = useState(false);
+  let [userDocs, setUserDocs] = useState({});
+  let [content, setContent] = useState();
+  let [user, setUser] = useState();
+
+  function getDocuments(){
+    fetch('http://localhost:3002/documents/'+userId, {method: 'GET'})
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      if(res.docs == null) console.log('no saved documents');
+      else setUserDocs(res.docs);
+    })
+  }
+
+  function saveExistingDocument(){
+    console.log(content);
+    // socket.emit("save-document", quill.getContents(), inputURL.value);
+    fetch('http://localhost:3002/save', {method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        }, 
+        body: JSON.stringify({id: documentId, contents: content, userId: userId, save: true})
+    })
+    .then((res) => {
+        return res.json();
+    })
+    .then((res) => {
+        console.log(res);
+        
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+// useEffect(() => {
+//   if (socket == null || quill == null) return;
+//   console.log('saving......');
+//   fetch('http://localhost:3002/save', {method: 'POST',
+//         headers: {
+//             "Content-Type": "application/json",
+//         }, 
+//         body: JSON.stringify({id: documentId, contents: quill.getContents(), userId: userId, save: true, new: false})
+//     })
+//     .then((res) => {
+//         return res.json();
+//     })
+//     .then((res) => {
+//         console.log(res);
+        
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     })
+// }, [socket, quill])
+
+  function saveDocument(){
+    fetch('http://localhost:3002/save', {method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            }, 
+            body: JSON.stringify({name: 'file', id: documentId, contents: content, userId: userId, save: false})
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            console.log(res);
+            if(res.message == 'false'){
+              setDialog([true, false]);
+            }
+            else{
+              // saveExistingDocument();
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+  }
+
 
   useEffect(() => {
     const s = io("http://localhost:3001")
@@ -51,7 +132,7 @@ export default function Editor() {
       // quill.enable()
     })
 
-    socket.emit("get-document", documentId)
+    socket.emit("get-document", userId, documentId)
   }, [socket, quill, documentId])
 
   useEffect(() => {
@@ -65,6 +146,8 @@ export default function Editor() {
       // clearInterval(interval)
     }
   }, [save])
+
+
 
   useEffect(() => {
     if (socket == null || quill == null) return
@@ -86,6 +169,9 @@ export default function Editor() {
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return
       socket.emit("send-changes", delta)
+      console.log(quill.getContents());
+      // console.log(content);
+      setContent(quill.getContents());
     }
     quill.on("text-change", handler)
 
@@ -93,6 +179,35 @@ export default function Editor() {
       quill.off("text-change", handler)
     }
   }, [socket, quill])
+
+  useEffect(() => {
+    if (socket == null || quill == null) return;
+    function handle(){
+      console.log('saving......'+documentId);
+      fetch('http://localhost:3002/save', {method: 'POST',
+          headers: {
+              "Content-Type": "application/json",
+          }, 
+          body: JSON.stringify({id: documentId, contents: quill.getContents(), userId: userId, save: true, new: false})
+      })
+      .then((res) => {
+          return res.json();
+      })
+      .then((res) => {
+          console.log(res);
+          
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+    }
+
+    quill.on("text-change", handle)
+
+    return () => {
+      quill.off("text-change", handle)
+    }
+  }, [socket, quill, documentId, userId])
 
   const wrapperRef = useCallback(wrapper => {
     if (wrapper == null) return
@@ -121,24 +236,25 @@ export default function Editor() {
     div.addEventListener('click', () => {
         console.log('save clicked');
         setDialog([true, true]);
-        saveDocument();
+        // saveDocument();
     })
     return div;
   }
 
-  function saveDocument(){
-      // if(socket == null) console.log('still null');
-      console.log('saving docs.....');
-      // let content = quill.getContents();
-      // socket.emit('save-document', content);
-      // socket.on('save-new-document', () => {
-      //     setDialog([true, false]);
-      // })
-      setSave((prev)=>{
-        return !prev;
-      })
-      // console.log(save);
-  }
+  // function saveDocument(){
+  //     // if(socket == null) console.log('still null');
+  //     console.log('saving docs.....');
+  //     // let content = quill.getContents();
+  //     // socket.emit('save-document', content);
+  //     // socket.on('save-new-document', () => {
+  //     //     setDialog([true, false]);
+  //     // })
+  //     setSave((prev)=>{
+  //       return !prev;
+  //     })
+  //     setDialog([true, false]);
+  //     // console.log(save);
+  // }
 
   function createImage(){
       console.log('save image created');
@@ -162,6 +278,7 @@ export default function Editor() {
   }
 
   function openSidebar(){
+    if(login) getDocuments();
     setSidebar(true);
   }
 
@@ -169,12 +286,40 @@ export default function Editor() {
     console.log(save);
   }, [save]);
 
+  useEffect(() => {
+    fetch('http://localhost:3002/getcreds', {method: 'POST',
+          headers: {
+              "Content-Type": "application/json",
+          }, 
+          body: JSON.stringify({userId: userId})
+      })
+      .then((res) => {
+          return res.json();
+      })
+      .then((res) => {
+          console.log(res);
+          let username = Cookies.get('username');
+          let password = Cookies.get('password');
+          if(res.email == username && res.password == password){
+            setUser(res);
+            setLogin(true);
+          }
+          else setLogin(false);
+          // else{
+          //   window.location.replace("http://localhost:3000/login", {replace: true});
+          // }
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+  }, [])
+
   return (
     <div>
       <div id="container" ref={wrapperRef}>
-        {dialog[0] && <Dialog share={dialog[1]} url={url} removeDialog={removeDialog}></Dialog>}
+        {dialog[0] && <Dialog saveExistingDocument={saveExistingDocument} share={dialog[1]} content={content} userId={userId} documentId={documentId} currentUrl={url} removeDialog={removeDialog} socket={socket} quill={quill}></Dialog>}
       </div>
-      {sidebar ? <Sidebar closeSidebar={closeSidebar}></Sidebar> : <FontAwesomeIcon icon={faBars} className='open-icon' onClick={openSidebar} />}
+      {sidebar ? <Sidebar getDocuments={getDocuments} userId={userId} docId={documentId} userDocs = {userDocs} closeSidebar={closeSidebar} login = {login} user={user}></Sidebar> : <FontAwesomeIcon icon={faBars} className='open-icon' onClick={openSidebar} />}
     </div>
   )
 }
