@@ -3,9 +3,9 @@ const mongoose = require("mongoose")
 
 const { Schema, model } = require("mongoose")
 
-const GLOBAL_URI = 'http://localhost:3000/document/cc863148-e40a-4185-9f28-aa1aef98424d/e6a15a36-5273-4521-8cfe-dfeb685b0ccd';
+const GLOBAL_URI = 'mongodb+srv://newUser_203:thisisapassword@cluster0.j51fwrw.mongodb.net/db-name?retryWrites=true&w=majority';
 const LOCAL_URI = 'mongodb://localhost:27017/documentDB';
-mongoose.connect(GLOBAL_URI, {
+mongoose.connect(LOCAL_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
