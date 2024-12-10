@@ -3,6 +3,7 @@ const app = express();
 const User = require('./index.js');
 const { v4: uuidv4 } = require('uuid');
 const cors = require('cors');
+const redis = require('./redis.js');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -131,6 +132,9 @@ app.post('/save', async (req, res) => {
         console.log(docs);
         userProfile.documents = docs;
         userProfile.save();
+        let data = await redis.del('user:'+userId)
+        if(data == 1) console.log('data in cache removed...')
+        else console.log('error removing data from cache...')
         res.json({message: 'success'});
     }
     // else if(userProfile.documents == undefined)
@@ -157,8 +161,17 @@ app.post('/save', async (req, res) => {
 
 app.get('/documents/:userid', async (req, res) => {
     let userid = req.params.userid;
-    let docs = await getUserDocuments(userid);
-    res.json({docs: docs});
+    let data = await redis.get("user:"+userid);
+    if(data) {
+        console.log('getting documents from cache...')
+        res.json({docs: JSON.parse(data)});
+    }
+    else{
+        let docs = await getUserDocuments(userid);
+        let data = await redis.set('user:'+userid, JSON.stringify(docs));
+        console.log('setting documents in cache...'+data);
+        res.json({docs: docs}); 
+    }
 })
 
 app.post('/getcreds', async (req, res) => {
