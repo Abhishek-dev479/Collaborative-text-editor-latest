@@ -38,7 +38,7 @@ export default function Editor() {
   let [user, setUser] = useState();
 
   function getDocuments(){
-    fetch('http://localhost:3002/documents/'+userId, {method: 'GET'})
+    fetch(process.env.REACT_APP_URL+'/documents/'+userId, {method: 'GET'})
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
@@ -50,7 +50,7 @@ export default function Editor() {
   function saveExistingDocument(){
     console.log(content);
     // socket.emit("save-document", quill.getContents(), inputURL.value);
-    fetch('http://localhost:3002/save', {method: 'POST',
+    fetch(process.env.REACT_APP_URL+'/save', {method: 'POST',
         headers: {
             "Content-Type": "application/json",
         }, 
@@ -90,7 +90,7 @@ export default function Editor() {
 // }, [socket, quill])
 
   function saveDocument(){
-    fetch('http://localhost:3002/save', {method: 'POST',
+    fetch(process.env.REACT_APP_URL+'/save', {method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             }, 
@@ -184,7 +184,7 @@ export default function Editor() {
     if (socket == null || quill == null) return;
     function handle(){
       console.log('saving......'+documentId);
-      fetch('http://localhost:3002/save', {method: 'POST',
+      fetch(process.env.REACT_APP_URL+'/save', {method: 'POST',
           headers: {
               "Content-Type": "application/json",
           }, 
@@ -287,7 +287,7 @@ export default function Editor() {
   }, [save]);
 
   useEffect(() => {
-    fetch('http://localhost:3002/getcreds', {method: 'POST',
+    fetch(process.env.REACT_APP_URL+'/getcreds', {method: 'POST',
           headers: {
               "Content-Type": "application/json",
           }, 

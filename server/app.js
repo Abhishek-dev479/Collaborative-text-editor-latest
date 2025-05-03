@@ -63,18 +63,6 @@ app.post('/signup', async (req, res) => {
             } 
             else res.json({message: 'error'});
         }
-    // console.log(user);
-    // if(user != undefined) res.json({message: 'user exists'});
-    // else{
-    //     let newUser = new User({
-    //         email: email,
-    //         name: req.body.username,
-    //         password: req.body.password
-    //     });
-    //     let u = await newUser.save();
-    //     if(u != undefined) res.json({message: 'success'});
-    //     else res.json({message: 'error'});
-    // }
 })
 
 app.post('/save', async (req, res) => {
@@ -133,26 +121,6 @@ app.post('/save', async (req, res) => {
         userProfile.save();
         res.json({message: 'success'});
     }
-    // else if(userProfile.documents == undefined)
-    // else{
-    //     let flag = 0;
-    //     console.log('========'+userProfile.documents);
-    //     let docs = userProfile.documents.map((e) => {
-    //         if(e._id == id){
-    //         e.data = content;
-    //         e.name = name;
-    //         flag = 1;
-    //         }
-    //     })
-    //     if(flag != 0){
-    //         userProfile.documents = docs;
-    //         userProfile.save();
-    //         res.json({message: 'success'});
-    //     }
-    //     else{
-    //         res.json({message: 'newfile'});
-    //     }
-    // }
 })
 
 app.get('/documents/:userid', async (req, res) => {
@@ -162,6 +130,7 @@ app.get('/documents/:userid', async (req, res) => {
 })
 
 app.post('/getcreds', async (req, res) => {
+    console.log('getting creds...')
     let userid = req.body.userId;
     let user = await User.findById(userid);
     if(user == undefined) res.json({message: 'error'});

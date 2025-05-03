@@ -12,7 +12,7 @@ export default function Document({name, userId, docId, createdOn, editedOn, getD
     }
 
     function deleteFile(){
-        fetch('http://localhost:3002/delete', {method: 'POST',
+        fetch(process.env.REACT_APP_URL+'/delete', {method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             }, 

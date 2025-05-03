@@ -36,7 +36,7 @@ function Login(){
             return;
         }
         console.log('fetching request...');
-        fetch('http://localhost:3002/login', {method: 'POST',
+        fetch(process.env.REACT_APP_URL+'/login', {method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             }, 
@@ -89,7 +89,7 @@ function Signup(){
         }
         // console.log(username+" "+password);
         console.log('fetching request...');
-        fetch('http://localhost:3002/signup', {method: 'POST',
+        fetch(process.env.REACT_APP_URL+'/signup', {method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             }, 
