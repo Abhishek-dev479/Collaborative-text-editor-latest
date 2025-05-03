@@ -1,11 +1,9 @@
 const mongoose = require("mongoose")
-
-
 const { Schema, model } = require("mongoose")
 
 const GLOBAL_URI = 'mongodb+srv://newUser_203:thisisapassword@cluster0.j51fwrw.mongodb.net/db-name?retryWrites=true&w=majority';
 const LOCAL_URI = 'mongodb://localhost:27017/documentDB';
-mongoose.connect(LOCAL_URI, {
+mongoose.connect(GLOBAL_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -61,20 +59,6 @@ io.on("connection", socket => {
       socket.on("send-changes", delta => {
         socket.broadcast.to(documentId).emit("receive-changes", delta)
       })
-
-      // socket.on("save-document", async (data, name) => {
-      //   console.log('saving document');
-      //   let docs = userProfile.documents.map((e) => {
-      //     if(e._id == documentId){
-      //       e.data = data;
-      //       e.name = name;
-      //     }
-      //     return e;
-      //   })
-      //   userProfile.documents = docs;
-      //   await userProfile.save();
-      //   // await Document.findByIdAndUpdate(documentId, { data })
-      // })
     }
     else{
       console.log('user-profile not found');
@@ -97,14 +81,6 @@ async function findOrCreateDocument(userProfile, id) {
     if(doc) return doc;
     else return undefined;
   }
-  // else {
-  //   let newDoc = {_id: id, name: id, data: defaultValue};
-  //   userProfile.documents.push(newDoc);
-  //   return newDoc;
-  // }
-  // const document = await Document.findById(id)
-  // if (document) return document
-  // else return await Document.create({ _id: id, data: defaultValue })
 }
 
 module.exports = User;
