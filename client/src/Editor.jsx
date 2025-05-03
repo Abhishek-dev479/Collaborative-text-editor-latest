@@ -29,7 +29,7 @@ export default function Editor() {
   const [socket, setSocket] = useState()
   const [quill, setQuill] = useState()
   let [dialog, setDialog] = useState([false, true]);
-  let [url, setUrl] = useState('http://localhost:3000'+useLocation().pathname);
+  let [url, setUrl] = useState(process.env.REACT_APP_OTHER_URL+useLocation().pathname);
   let [save, setSave] = useState(true);
   let [sidebar, setSidebar] = useState(false);
   let [login, setLogin] = useState(false);

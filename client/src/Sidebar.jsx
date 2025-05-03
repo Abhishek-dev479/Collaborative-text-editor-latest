@@ -15,14 +15,14 @@ export default function Sidebar(props){
     }
 
     function createNewFile(){
-        window.location.replace(`http://localhost:3000/document/${props.userId}/${uuidv4()}`)
+        window.location.replace(process.env.REACT_APP_OTHER_URL+`/document/${props.userId}/${uuidv4()}`)
     }
 
     return (
         <div id='sidebar-backdrop' onClick={closeSidebar}>
         <div id="sidebar" onClick={(e) => e.stopPropagation()} className='custom-scrollbar'>
             <div className='close-icon-div'><FontAwesomeIcon icon={faXmark} className='close-icon' onClick={closeSidebar} /></div>
-            {!props.login ? <Link to="http://localhost:3000/login"><button id='login'>Login/Signup</button></Link> :
+            {!props.login ? <Link to={process.env.REACT_APP_OTHER_URL+"/login"}><button id='login'>Login/Signup</button></Link> :
             <div id='profile'>
                 {/* <img src="/save.png" alt="" /> */}
                 <FontAwesomeIcon id='user-icon' icon={faUser} />

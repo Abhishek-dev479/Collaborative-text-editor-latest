@@ -50,7 +50,7 @@ function Login(){
             if(res.userId != undefined){
                 cookies.set('username', input.email);
                 cookies.set('password', input.password);
-                window.location.replace("http://localhost:3000/document/"+res.userId+'/'+uuid(), {replace: true});
+                window.location.replace(process.env.REACT_APP_OTHER_URL+"/document/"+res.userId+'/'+uuid(), {replace: true});
             }
             else setMessage('Wrong username or password');
         })
@@ -72,7 +72,7 @@ function Login(){
             <input type="password" placeholder='Password' name='password' onChange={changeInput}/>
             <button onClick={getLogin}>Login</button>
             <br />
-            <div id='div5'><h4>Don't have an account? </h4><Link to={'http://localhost:3000/signup'}>Sign Up</Link></div>
+            <div id='div5'><h4>Don't have an account? </h4><Link to={process.env.REACT_APP_OTHER_URL+'/signup'}>Sign Up</Link></div>
             <p id='message'>{message}</p>
         </div>
     )
@@ -103,7 +103,7 @@ function Signup(){
             if(res.message == 'success'){
                 cookies.set('username', input.email);
                 cookies.set('password', input.password);
-                window.location.replace("http://localhost:3000/document/"+res.userId+'/'+uuid(), {replace: true});
+                window.location.replace(process.env.REACT_APP_OTHER_URL+"/document/"+res.userId+'/'+uuid(), {replace: true});
             }
             else setMessage(res.message);
         })
@@ -124,7 +124,7 @@ function Signup(){
             <input type="password" placeholder='Password' name='password' onChange={changeInput} required/>
             <button onClick={signup}>Signup</button>
             <br />
-            <div id='div5'><h4>Already have an account? </h4><Link to={'http://localhost:3000/login'}>Login</Link></div>
+            <div id='div5'><h4>Already have an account? </h4><Link to={process.env.REACT_APP_OTHER_URL+'/login'}>Login</Link></div>
             <p id='message'>{message}</p>
         </div>
     )

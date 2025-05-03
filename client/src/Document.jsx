@@ -8,7 +8,7 @@ export default function Document({name, userId, docId, createdOn, editedOn, getD
     let [display, setDisplay] = useState();
     
     function redirect(){
-        window.location.replace('http://localhost:3000/document/'+userId+'/'+docId);
+        window.location.replace(process.env.REACT_APP_OTHER_URL+'/document/'+userId+'/'+docId);
     }
 
     function deleteFile(){

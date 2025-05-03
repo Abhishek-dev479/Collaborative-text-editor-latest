@@ -44,17 +44,31 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize Socket.IO for WebSocket communication
+// const io = socketIO(server, {
+//   cors: {
+//     origin: "*",
+//     methods: ["GET", "POST"],
+//   },
+// });
 const io = socketIO(server, {
   cors: {
-    origin: "*",
+    origin: "http://my-editor-frontend.s3-website-us-east-1.amazonaws.com",
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
+
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
+
+// app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: "http://my-editor-frontend.s3-website-us-east-1.amazonaws.com",
+  credentials: true,
+}));
+
 
 // WebSocket setup (real-time editing)
 io.on("connection", (socket) => {
